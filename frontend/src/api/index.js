@@ -6,7 +6,7 @@ import store from '../store';
 import { models } from '../constants';
 
 const http = axios.create({
-  baseURL: process.env.BASE_URL,
+  baseURL: window.RootURL || process.env.BASE_URL,
   withCredentials: false,
   responseType: 'json',
 

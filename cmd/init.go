@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -571,6 +573,26 @@ func initHTTPServer(app *App) *echo.Echo {
 		RootURL:    app.constants.RootURL,
 		LogoURL:    app.constants.LogoURL,
 		FaviconURL: app.constants.FaviconURL}
+
+	// Load the admin frontend template and inject the RootURL variable in
+	// the <script> tag which the Javsacript frontend then picks up and uses
+	// as the base URL.
+	b, err := app.fs.Read("/frontend/index.html")
+	if err != nil {
+		lo.Fatalf("error loading admin frontend template: %v", err)
+	}
+
+	path := "/"
+	u, err := url.Parse(app.constants.RootURL)
+	if err == nil {
+		path = u.Path
+	}
+
+	// TODO: <base href="" /> <-- having this completely breaks the frontend.
+	head := bytes.ReplaceAll([]byte(`<head><script>window.RootURL = "%s";</script><base href="%s" />`),
+		[]byte("%s"),
+		[]byte(path))
+	app.frontendTpl = bytes.ReplaceAll(b, []byte(`<head>`), head)
 
 	// Initialize the static file server.
 	fSrv := app.fs.FileServer()

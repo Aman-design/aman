@@ -174,13 +174,8 @@ func registerHTTPHandlers(e *echo.Echo, app *App) {
 func handleIndexPage(c echo.Context) error {
 	app := c.Get("app").(*App)
 
-	b, err := app.fs.Read("/frontend/index.html")
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
 	c.Response().Header().Set("Content-Type", "text/html")
-	return c.String(http.StatusOK, string(b))
+	return c.HTMLBlob(http.StatusOK, app.frontendTpl)
 }
 
 // handleHealthCheck is a healthcheck endpoint that returns a 200 response.

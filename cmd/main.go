@@ -33,19 +33,20 @@ const (
 // App contains the "global" components that are
 // passed around, especially through HTTP handlers.
 type App struct {
-	fs         stuffbin.FileSystem
-	db         *sqlx.DB
-	queries    *Queries
-	constants  *constants
-	manager    *manager.Manager
-	importer   *subimporter.Importer
-	messengers map[string]messenger.Messenger
-	media      media.Store
-	i18n       *i18n.I18n
-	bounce     *bounce.Manager
-	notifTpls  *template.Template
-	log        *log.Logger
-	bufLog     *buflog.BufLog
+	fs          stuffbin.FileSystem
+	db          *sqlx.DB
+	queries     *Queries
+	constants   *constants
+	manager     *manager.Manager
+	importer    *subimporter.Importer
+	messengers  map[string]messenger.Messenger
+	media       media.Store
+	i18n        *i18n.I18n
+	bounce      *bounce.Manager
+	frontendTpl []byte
+	notifTpls   *template.Template
+	log         *log.Logger
+	bufLog      *buflog.BufLog
 
 	// Channel for passing reload signals.
 	sigChan chan os.Signal

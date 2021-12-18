@@ -70,6 +70,7 @@ type constants struct {
 
 	Appearance struct {
 		AdminCSS  []byte `koanf:"admin.custom_css"`
+		AdminJS   []byte `koanf:"admin.custom_js"`
 		PublicCSS []byte `koanf:"public.custom_css"`
 		PublicJS  []byte `koanf:"public.custom_js"`
 	}

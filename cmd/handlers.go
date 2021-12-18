@@ -55,7 +55,8 @@ func initHTTPHandlers(e *echo.Echo, app *App) {
 		return c.Render(http.StatusOK, "home", publicTpl{Title: "listmonk"})
 	})
 	g.GET(path.Join(adminRoot, ""), handleAdminPage)
-	g.GET(path.Join(adminRoot, "/custom.css"), serveCustomApperance("public.admin_css"))
+	g.GET(path.Join(adminRoot, "/custom.css"), serveCustomApperance("admin.custom_css"))
+	g.GET(path.Join(adminRoot, "/custom.js"), serveCustomApperance("admin.custom_js"))
 	g.GET(path.Join(adminRoot, "/*"), handleAdminPage)
 
 	// API endpoints.
@@ -203,6 +204,10 @@ func serveCustomApperance(name string) echo.HandlerFunc {
 		case "admin.custom_css":
 			out = app.constants.Appearance.AdminCSS
 			hdr = "text/css; charset=utf-8"
+
+		case "admin.custom_js":
+			out = app.constants.Appearance.AdminJS
+			hdr = "application/javascript; charset=utf-8"
 
 		case "public.custom_css":
 			out = app.constants.Appearance.PublicCSS

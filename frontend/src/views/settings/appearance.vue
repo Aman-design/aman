@@ -1,20 +1,25 @@
 <template>
   <div class="items">
     <b-tabs :animated="false" v-model="activeTab">
-      <b-tab-item :label="$t('settings.appearance.admin.name')" label-position="on-border">
+      <b-tab-item :label="$t('settings.appearance.adminName')" label-position="on-border">
         <div class="block">
-          {{ $t('settings.appearance.admin.help') }}
+          {{ $t('settings.appearance.adminHelp') }}
         </div>
 
         <b-field :label="$t('settings.appearance.customCSS')" label-position="on-border">
           <html-editor v-model="data['appearance.admin.custom_css']" name="body"
           language="css" />
         </b-field>
+
+        <b-field :label="$t('settings.appearance.customJS')" label-position="on-border">
+          <html-editor v-model="data['appearance.admin.custom_js']" name="body"
+          language="css" />
+        </b-field>
       </b-tab-item><!-- admin -->
 
-      <b-tab-item :label="$t('settings.appearance.public.name')" label-position="on-border">
+      <b-tab-item :label="$t('settings.appearance.publicName')" label-position="on-border">
         <div class="block">
-          {{ $t('settings.appearance.public.help') }}
+          {{ $t('settings.appearance.publicHelp') }}
         </div>
 
         <b-field :label="$t('settings.appearance.customCSS')" label-position="on-border">

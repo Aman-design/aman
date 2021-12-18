@@ -3,37 +3,28 @@
     <b-tabs :animated="false" v-model="activeTab">
       <b-tab-item :label="$t('settings.appearance.admin.name')" label-position="on-border">
         <div class="block">
-          <p>
-            {{ $t('settings.appearance.admin.help') }}
-          </p>
+          {{ $t('settings.appearance.admin.help') }}
         </div>
-        <br /><br />
 
-        <b-field :label="$t('settings.appearance.customCSS')" label-position="on-border"
-        :message="$t('settings.appearance.cssHelp')">
-          <appearance-editor v-model="data['appearance.admin.custom_css']" name="body"
+        <b-field :label="$t('settings.appearance.customCSS')" label-position="on-border">
+          <html-editor v-model="data['appearance.admin.custom_css']" name="body"
           language="css" />
         </b-field>
       </b-tab-item><!-- admin -->
 
       <b-tab-item :label="$t('settings.appearance.public.name')" label-position="on-border">
         <div class="block">
-          <p>
-            {{ $t('settings.appearance.public.help') }}
-          </p>
+          {{ $t('settings.appearance.public.help') }}
         </div>
-        <br /><br />
 
-        <b-field :label="$t('settings.appearance.customCSS')" label-position="on-border"
-        :message="$t('settings.appearance.cssHelp')">
-          <appearance-editor v-model="data['appearance.public.custom_css']" name="body"
+        <b-field :label="$t('settings.appearance.customCSS')" label-position="on-border">
+          <html-editor v-model="data['appearance.public.custom_css']" name="body"
           language="css" />
         </b-field>
 
-        <b-field :label="$t('settings.appearance.customJS')" label-position="on-border"
-        :message="$t('settings.appearance.jsHelp')">
-          <appearance-editor v-model="data['appearance.public.custom_js']" name="body"
-          language="javascript" />
+        <b-field :label="$t('settings.appearance.customJS')" label-position="on-border">
+          <html-editor v-model="data['appearance.public.custom_js']" name="body"
+          language="js" />
         </b-field>
       </b-tab-item><!-- public -->
     </b-tabs>
@@ -43,11 +34,11 @@
 <script>
 import Vue from 'vue';
 import { mapState } from 'vuex';
-import AppearanceEditor from '../../components/AppearanceEditor.vue';
+import HTMLEditor from '../../components/HTMLEditor.vue';
 
 export default Vue.extend({
   components: {
-    'appearance-editor': AppearanceEditor,
+    'html-editor': HTMLEditor,
   },
 
   props: {

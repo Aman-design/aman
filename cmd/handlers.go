@@ -55,6 +55,7 @@ func initHTTPHandlers(e *echo.Echo, app *App) {
 		return c.Render(http.StatusOK, "home", publicTpl{Title: "listmonk"})
 	})
 	g.GET(path.Join(adminRoot, ""), handleAdminPage)
+	g.GET(path.Join(adminRoot, "/custom.css"), serveCustomApperance("public.admin_css"))
 	g.GET(path.Join(adminRoot, "/*"), handleAdminPage)
 
 	// API endpoints.
@@ -134,11 +135,6 @@ func initHTTPHandlers(e *echo.Echo, app *App) {
 	g.PUT("/api/templates/:id/default", handleTemplateSetDefault)
 	g.DELETE("/api/templates/:id", handleDeleteTemplate)
 
-	// Appearance
-	g.GET("/api/admin/custom.css", handleGetAdminCustomCSS)
-	g.GET("/api/public/custom.css", handleGetPublicCustomCSS)
-	g.GET("/api/public/custom.js", handleGetPublicCustomJS)
-
 	if app.constants.BounceWebhooksEnabled {
 		// Private authenticated bounce endpoint.
 		g.POST("/webhooks/bounce", handleBounceWebhook)
@@ -147,6 +143,7 @@ func initHTTPHandlers(e *echo.Echo, app *App) {
 		e.POST("/webhooks/service/:service", handleBounceWebhook)
 	}
 
+	// /public/static/* file server is registered in initHTTPServer().
 	// Public subscriber facing views.
 	e.GET("/subscription/form", handleSubscriptionFormPage)
 	e.POST("/subscription/form", handleSubscriptionForm)
@@ -166,6 +163,10 @@ func initHTTPHandlers(e *echo.Echo, app *App) {
 		"campUUID", "subUUID")))
 	e.GET("/campaign/:campUUID/:subUUID/px.png", noIndex(validateUUID(handleRegisterCampaignView,
 		"campUUID", "subUUID")))
+
+	e.GET("/public/custom.css", serveCustomApperance("public.custom_css"))
+	e.GET("/public/custom.js", serveCustomApperance("public.custom_js"))
+
 	// Public health API endpoint.
 	e.GET("/health", handleHealthCheck)
 }
@@ -185,6 +186,35 @@ func handleAdminPage(c echo.Context) error {
 // handleHealthCheck is a healthcheck endpoint that returns a 200 response.
 func handleHealthCheck(c echo.Context) error {
 	return c.JSON(http.StatusOK, okResp{true})
+}
+
+// serveCustomApperance serves the given custom CSS/JS apperance blob
+// meant for customizing public and admin pages from the admin settings UI.
+func serveCustomApperance(name string) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var (
+			app = c.Get("app").(*App)
+
+			out []byte
+			hdr string
+		)
+
+		switch name {
+		case "admin.custom_css":
+			out = app.constants.Appearance.AdminCSS
+			hdr = "text/css; charset=utf-8"
+
+		case "public.custom_css":
+			out = app.constants.Appearance.PublicCSS
+			hdr = "text/css; charset=utf-8"
+
+		case "public.custom_js":
+			out = app.constants.Appearance.PublicJS
+			hdr = "application/javascript; charset=utf-8"
+		}
+
+		return c.Blob(http.StatusOK, hdr, out)
+	}
 }
 
 // basicAuth middleware does an HTTP BasicAuth authentication for admin handlers.

@@ -106,9 +106,9 @@ type settings struct {
 		ScanInterval  string `json:"scan_interval"`
 	} `json:"bounce.mailboxes"`
 
-	AdminCustomCSS					string 				`json:"appearance.admin.custom_css"`
-	PublicCustomCSS					string 				`json:"appearance.public.custom_css"`
-	PublicCustomJS					string 				`json:"appearance.public.custom_js"`
+	AdminCustomCSS  string `json:"appearance.admin.custom_css"`
+	PublicCustomCSS string `json:"appearance.public.custom_css"`
+	PublicCustomJS  string `json:"appearance.public.custom_js"`
 }
 
 var (
@@ -300,45 +300,6 @@ func handleUpdateSettings(c echo.Context) error {
 func handleGetLogs(c echo.Context) error {
 	app := c.Get("app").(*App)
 	return c.JSON(http.StatusOK, okResp{app.bufLog.Lines()})
-}
-
-// handleGetAdminCustomCSS returns the Admin custom CSS from the DB.
-func handleGetAdminCustomCSS(c echo.Context) error {
-	app := c.Get("app").(*App)
-
-	s, err := getSettings(app)
-	if err != nil {
-		return err
-	}
-
-	css := []byte(s.AdminCustomCSS)
-	return c.Blob(http.StatusOK, "text/css", css)
-}
-
-// handleGetPublicCustomCSS returns the Admin custom CSS from the DB.
-func handleGetPublicCustomCSS(c echo.Context) error {
-	app := c.Get("app").(*App)
-
-	s, err := getSettings(app)
-	if err != nil {
-		return err
-	}
-
-	css := []byte(s.PublicCustomCSS)
-	return c.Blob(http.StatusOK, "text/css", css)
-}
-
-// handleGetPublicCustomJS returns the Admin custom CSS from the DB.
-func handleGetPublicCustomJS(c echo.Context) error {
-	app := c.Get("app").(*App)
-
-	s, err := getSettings(app)
-	if err != nil {
-		return err
-	}
-
-	js := []byte(s.PublicCustomJS)
-	return c.Blob(http.StatusOK, "text/javascript", js)
 }
 
 func getSettings(app *App) (settings, error) {
